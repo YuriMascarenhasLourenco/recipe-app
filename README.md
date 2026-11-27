@@ -106,12 +106,14 @@ DB_NAME
 DB_PASSWORD
 DB_PORT
 DB_USERNAME
-GH_AI_ENDPOINT
-GH_AI_MODEL
+ENDPOINT
+MODEL
+TOKEN
 JWT_SECRET
 LANGUAGE
 PORT
 
+OBS: ENDPOINT,MODEL AND TOKEN refers to the llm model used. To be able to use the project is necessary to account into a llm provider such as huggingface, Google AI studio, GroqCloud or Github Marketplace to take the url to the endpoint, and chose the llm of your choice and generate one api-key respectively.
 
 LANGUAGE=pt
 
