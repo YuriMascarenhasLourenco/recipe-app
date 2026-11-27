@@ -16,24 +16,22 @@ export class UserMapper {
       domain.recipes?.map((recipe) => RecipeMapper.toOrmEntity(recipe)) || [];
     return orm;
   }
-  static fromcreateDtoToOrm(dto: CreateUserDto): UserORMEntity {
+  static fromcreateDtoToOrm(dto: CreateUserDto, salt: string): UserORMEntity {
     const orm = new UserORMEntity();
     orm.username = dto.username;
     orm.email = dto.email;
     orm.password = dto.password;
-    orm.salt = dto.salt || '';
+    orm.salt = salt;
     return orm;
   }
   static toCreateDto(domain: User): CreateUserDto {
-    return new CreateUserDto(domain.username, domain.email, domain.password);
+    return new CreateUserDto(domain.username, domain.password, domain.email);
   }
   static toDto(domain: UserORMEntity): UserDto {
     return new UserDto(
       domain.id,
       domain.username,
       domain.email,
-      domain.password,
-      domain.salt,
       domain.createdAt,
       domain.updatedAt,
       domain.recipes?.map((recipe) => RecipeMapper.toDto(recipe)) || [],

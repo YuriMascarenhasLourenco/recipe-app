@@ -6,7 +6,7 @@ import { RecipeUseCase } from 'src/application/use-cases/recipe.use-case';
 import { RecipeRepositoryImpl } from 'src/infrastructure/database/repositories/recipe.repository-impl';
 import { TextController } from '../controllers/ai.controller';
 import { GenerateTextUseCase } from 'src/application/use-cases/generate-recipe.use-case';
-import { GithubAiService } from 'src/infrastructure/ai/huggingface.service';
+import { GithubAiService } from 'src/infrastructure/ai/aicall.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([RecipeORMEntity])],

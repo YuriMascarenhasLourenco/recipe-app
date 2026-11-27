@@ -7,7 +7,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 @Module({
   imports: [
     TypeOrmModule.forRootAsync({
-      imports: [ConfigModule], // importa aqui também
+      imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
         type: 'postgres',
@@ -16,8 +16,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         username: config.get<string>('DB_USERNAME'),
         password: config.get<string>('DB_PASSWORD'),
         database: config.get<string>('DB_NAME'),
-        synchronize: true,
-        entities: [RecipeORMEntity, UserORMEntity], // adicione suas entidades aqui
+        synchronize: false,
+        entities: [RecipeORMEntity, UserORMEntity],
       }),
     }),
   ],

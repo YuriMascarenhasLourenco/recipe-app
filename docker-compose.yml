@@ -14,9 +14,9 @@ services:
         JWT_SECRET: {JWT_SECRET}
         DB_PORT: {DB_PORT}
         DB_USERNAME: {DB_USERNAME}
-        GITHUB_TOKEN: {GITHUB_TOKEN}
-        GH_AI_ENDPOINT: {GH_AI_ENDPOINT}
-        GH_AI_MODEL: {GH_AI_MODEL}
+        TOKEN: {TOKEN}
+        ENDPOINT: {ENDPOINT}
+        MODEL: {MODEL}
     ports:
       - '3000:3000'
     networks:

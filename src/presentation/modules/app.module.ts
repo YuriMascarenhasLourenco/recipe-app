@@ -11,13 +11,13 @@ import * as path from 'path';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     AuthModule,
     DatabaseModule,
     RecipeModule,
     UserModule,
-    ConfigModule.forRoot({
-      isGlobal: true,
-    }),
     I18nModule.forRootAsync({
       useFactory: (configService: ConfigService) => ({
         fallbackLanguage: configService.get('LANGUAGE'),

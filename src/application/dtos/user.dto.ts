@@ -1,21 +1,11 @@
 import { IsDate, IsNumber, IsString } from 'class-validator';
-import { CreateUserDto } from './create-user.dto';
 import { RecipeDto } from './recipe.dto';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class UserDto extends CreateUserDto {
+export class UserDto {
+  @ApiProperty({ description: 'the user id', example: 1 })
   @IsNumber()
   id: number;
-
-  @IsString()
-  salt: string;
-
-  @ApiProperty({
-    description: 'the user password',
-    example: 'strongPassword123',
-  })
-  @IsString()
-  password: string;
 
   @ApiProperty({
     description: 'the user email',
@@ -31,6 +21,9 @@ export class UserDto extends CreateUserDto {
   @IsString()
   username: string;
 
+  @ApiProperty({
+    description: 'the date the user was created',
+  })
   @IsDate()
   createdAt?: Date;
 
@@ -41,16 +34,11 @@ export class UserDto extends CreateUserDto {
     id: number,
     username: string,
     email: string,
-    password: string,
-    salt: string,
     createdAt?: Date,
     updatedAt?: Date,
     recipes?: RecipeDto[],
   ) {
-    super(username, password, email);
     this.id = id;
-    this.salt = salt;
-    this.password = password;
     this.email = email;
     this.username = username;
     this.createdAt = createdAt;

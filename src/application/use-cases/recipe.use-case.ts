@@ -9,7 +9,7 @@ export class RecipeUseCase {
   constructor(
     @Inject('RecipeRepository')
     private readonly recipeService: RecipeRepository,
-  ) { }
+  ) {}
   async createRecipe(recipe: CreateRecipeDto): Promise<RecipeDto> {
     const recipeEntity = RecipeMapper.toOrmEntity(recipe);
     return this.recipeService.create(recipeEntity);

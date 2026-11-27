@@ -5,23 +5,26 @@ import { UserORMEntity } from '../typeorm/user.orm-entity';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from 'src/application/dtos/create-user.dto';
 import { UserDto } from 'src/application/dtos/user.dto';
-import { plainToInstance } from 'class-transformer';
 import { UserMapper } from 'src/infrastructure/mappers/user.mapper';
 import * as bcrypt from 'bcrypt';
 import { i18nValidationMessage } from 'nestjs-i18n';
 import { updateUserDto } from 'src/application/dtos/update-user.dto';
+import { User } from 'src/domain/interfaces/entities/user.entity';
 
 @Injectable()
 export class UserRepositoryImpl implements UserRepository {
   constructor(
     @InjectRepository(UserORMEntity)
     private readonly ormRepo: Repository<UserORMEntity>,
-  ) { }
+  ) {}
   async create(user: CreateUserDto): Promise<UserDto> {
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(user.password, salt);
-    const userWithHashedPassword = { ...user, salt, password: hashedPassword };
-    const userOrmEntity = UserMapper.fromcreateDtoToOrm(userWithHashedPassword);
+    const userWithHashedPassword = { ...user, password: hashedPassword };
+    const userOrmEntity = UserMapper.fromcreateDtoToOrm(
+      userWithHashedPassword,
+      salt,
+    );
     const savedUser = await this.ormRepo.save(userOrmEntity);
     return UserMapper.toDto(savedUser); // Sempre converta para DTO antes de retornar
   }
@@ -56,12 +59,15 @@ export class UserRepositoryImpl implements UserRepository {
     }
     existingUser.username = user.name;
     existingUser.email = user.email;
-    existingUser.password = user.password;
+    if (user.password !== undefined) {
+      const salt = await bcrypt.genSalt();
+      existingUser.password = await bcrypt.hash(user.password, salt);
+      existingUser.salt = salt;
+    }
     await this.ormRepo.save(existingUser);
-    const updatedUser = plainToInstance(UserDto, existingUser);
-    return updatedUser;
+    return UserMapper.toDto(existingUser);
   }
-  async findbyEmail(email: string): Promise<UserDto | null> {
+  async findByEmailForAuth(email: string): Promise<User | null> {
     const findByEmail = await this.ormRepo.findOneBy({ email });
     if (!findByEmail) {
       throw new HttpException(
@@ -70,7 +76,7 @@ export class UserRepositoryImpl implements UserRepository {
       );
     }
 
-    return UserMapper.toDto(findByEmail);
+    return UserMapper.toDomainEntity(findByEmail);
   }
   async comparePassword(
     plainPassword: string,

@@ -7,7 +7,7 @@ import { updateUserDto } from '../dtos/update-user.dto';
 export class UserUseCase {
   constructor(
     @Inject('UserRepository') private readonly userService: UserRepository,
-  ) { }
+  ) {}
 
   async registerUser(userData: CreateUserDto): Promise<UserDto | null> {
     const savedUser = await this.userService.create(userData);

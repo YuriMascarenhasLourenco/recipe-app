@@ -12,7 +12,7 @@ export class RecipeRepositoryImpl implements RecipeRepository {
   constructor(
     @InjectRepository(RecipeORMEntity)
     private readonly Orm: Repository<RecipeORMEntity>,
-  ) { }
+  ) {}
   async create(recipe: RecipeORMEntity): Promise<RecipeORMEntity> {
     return await this.Orm.save(recipe);
   }

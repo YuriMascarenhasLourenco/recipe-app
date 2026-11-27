@@ -9,10 +9,10 @@ export class JwtAuthService implements AuthInterface {
   constructor(
     private readonly jwtService: JwtService,
     @Inject('UserRepository') private readonly usersRepository: UserRepository,
-  ) { }
+  ) {}
 
   async validateUser(email: string, password: string): Promise<UserDto | null> {
-    const user = await this.usersRepository.findbyEmail(email);
+    const user = await this.usersRepository.findByEmailForAuth(email);
     if (!user) return null;
     const matches = await this.usersRepository.comparePassword(
       password,
@@ -20,7 +20,13 @@ export class JwtAuthService implements AuthInterface {
     );
     if (!matches) return null;
 
-    return user;
+    return new UserDto(
+      user.id,
+      user.username,
+      user.email,
+      user.createdAt,
+      user.updatedAt,
+    );
   }
 
   async login(user: UserDto): Promise<{ access_token: string }> {
