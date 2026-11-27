@@ -35,7 +35,8 @@ describe('UserRepositoryImpl', () => {
     expect(result).toBeInstanceOf(UserDto);
     expect(result).not.toHaveProperty('password');
     expect(result).not.toHaveProperty('salt');
-    const savedUser = (ormRepo.save as jest.Mock).mock.calls[0][0];
+    const savedUser = (ormRepo.save as jest.Mock).mock
+      .calls[0][0] as UserORMEntity;
     expect(savedUser.password).not.toBe('plain-text-password');
     expect(
       await bcrypt.compare('plain-text-password', savedUser.password),
@@ -43,7 +44,7 @@ describe('UserRepositoryImpl', () => {
   });
 
   it('returns a public DTO for a user profile', async () => {
-    (ormRepo.findOne as jest.Mock).mockResolvedValue(
+    (ormRepo.findOne as jest.Mock).mockImplementation(async () =>
       Object.assign(new UserORMEntity(), {
         id: 2,
         username: 'jane',
@@ -102,7 +103,7 @@ describe('UserRepositoryImpl', () => {
       salt: 'original-salt',
       createdAt: new Date(),
     });
-    (ormRepo.findOne as jest.Mock).mockResolvedValue(existingUser);
+    (ormRepo.findOne as jest.Mock).mockImplementation(async () => existingUser);
     (ormRepo.save as jest.Mock).mockImplementation(async (user) => user);
 
     await repository.update({
